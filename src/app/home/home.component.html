@@ -1,12 +1,77 @@
-
 <app-header></app-header>
 <div class="flex items-center justify-center">
-    <div class="bg-[#0D2240] p-4 rounded-xl">
-        <h1 class="text-white text-2xl font-bold">
-            Encontre a sua passagem de ônibus!
-        </h1>
-        
-        <p-calendar [(ngModel)]="date" />
+  <div class="bg-[#0D2240] p-4 rounded-xl flex flex-col w-full max-w-lg">
+    <h1 class="text-white text-2xl font-bold text-center mb-4">
+      Encontre a sua passagem de ônibus!
+    </h1>
 
+    <div class="p-fluid mt-2">
+      <p-floatLabel>
+        <p-autoComplete
+          [(ngModel)]="selectedFrom"
+          [suggestions]="fromSuggestions"
+          (completeMethod)="searchFrom($event)"
+          field="name"
+          [minLength]="1"
+        ></p-autoComplete>
+        <label for="from">Partindo de</label>
+      </p-floatLabel>
     </div>
+
+    <div class="relative">
+      <button
+        class="hover:cursor-pointer hover:bg-blue-200 absolute right-4 z-20 rotate-90 border-2 border-blue-600 rounded-full p-4 -mt-4 bg-white hover:scale-105"
+        (click)="swapLocations()"
+      >
+        <i class="pi pi-arrow-right-arrow-left text-blue-600 font-bold"></i>
+      </button>
+    </div>
+
+    <div class="p-fluid mt-6">
+      <p-floatLabel>
+        <p-autoComplete
+          [(ngModel)]="selectedTo"
+          [suggestions]="toSuggestions"
+          (completeMethod)="searchTo($event)"
+          field="name"
+          [minLength]="1"
+        ></p-autoComplete>
+        <label for="to">Indo para</label>
+      </p-floatLabel>
+    </div>
+
+    <div class="p-fluid mt-6">
+      <p-calendar [(ngModel)]="date" placeholder="Data Saída" class="w-full"></p-calendar>
+    </div>
+
+    <div class="mt-6">
+      <button
+        class="w-full flex justify-center items-center gap-x-4 rounded-full bg-[#2764c0] border-none py-4 text-white font-black hover:cursor-pointer hover:scale-105"
+        (click)="searchTickets()"
+        [disabled]="isLoading"
+      >
+        <i *ngIf="!isLoading" class="pi pi-search"></i>
+        <span *ngIf="!isLoading">BUSCAR PASSAGEM</span>
+        <i *ngIf="isLoading" class="pi pi-spin pi-spinner"></i>
+      </button>
+    </div>
+
+    <!-- Exibir mensagem de erro -->
+    <p *ngIf="errorMessage" class="text-red-500 text-center mt-4">{{ errorMessage }}</p>
+
+    <!-- Exibir resultados -->
+    <div *ngIf="results.length" class="mt-6">
+      <h2 class="text-white text-xl font-bold mb-4">Resultados:</h2>
+      <ul class="space-y-4">
+        <li *ngFor="let result of results" class="bg-white p-4 rounded-lg shadow">
+          <h3 class="text-lg font-bold">{{ result.company.name }}</h3>
+          <p>De: {{ result.from.name }} Para: {{ result.to.name }}</p>
+          <p>Saída: {{ result.departure.date }} {{ result.departure.time }}</p>
+          <p>Chegada: {{ result.arrival.date }} {{ result.arrival.time }}</p>
+          <p>Duração: {{ result.travelDuration / 3600 | number: '1.0-2' }} horas</p>
+          <p>Preço: R$ {{ result.price.price | number: '1.2-2' }}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

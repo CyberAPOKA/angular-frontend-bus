@@ -1,0 +1,97 @@
+<div class="container mx-auto p-4 max-w-7xl">
+    <h1 class="text-2xl font-bold mb-4">Resultados de Passagens</h1>
+
+    <p *ngIf="isLoading" class="text-blue-500">Carregando resultados...</p>
+
+    <p *ngIf="errorMessage" class="text-red-500">{{ errorMessage }}</p>
+
+    <!-- Header -->
+    <div class="bg-[#0d2240] p-4 grid grid-cols-6 mb-2 text-sm">
+        <h1 class="font-bold text-white">Companhia</h1>
+        <h1 class="font-bold text-white">Saída / Previsão</h1>
+        <h1 class="font-bold text-white">Embarque / Desembarque</h1>
+        <h1 class="font-bold text-white ml-12">Classe</h1>
+        <h1 class="font-bold text-white ml-12">Preço</h1>
+    </div>
+
+    <!-- Resultados -->
+    <div *ngIf="results.length > 0" class="grid grid-cols-1 gap-2">
+        <div
+            *ngFor="let result of results"
+            class="p-4 border border-[#aca9a9] hover:border-[#0b9852] hover:cursor-pointer"
+            (click)="goToSeats(result.id)">
+            <div>
+                <!-- <pre>{{ result | json }}</pre> -->
+            </div>
+            <div class="grid grid-cols-6 items-center">
+                <h2 class="text-xl font-bold">
+                    <img [src]="result.company.logo" alt="Logo da Empresa"
+                        class="inline-block w-20 mr-2" />
+                    <!-- {{ result.company.name }} -->
+                </h2>
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-x-2">
+                        <img
+                            src="https://queropassagem.com.br/images/icon_onibus-darkblue.svg"
+                            alt class="w-6">
+                        <span class="text-[#0d2240] font-bold">
+                            {{ formatTime(result.departure.time) }}
+                        </span>
+                        <i class="pi pi-arrow-right"></i>
+                        <span class="text-[#0d2240]">
+                            {{ formatTime(result.arrival.time) }}
+                        </span>
+                    </div>
+                    <p class="text-[#0d2240] text-xs">
+                        previsão
+                        {{ formatTravelDuration(result.travelDuration) }}
+                    </p>
+                </div>
+                <div class="flex flex-col text-sm">
+                    <h1 class="text-[#0d2240]">{{ result.from.name }}</h1>
+                    <h1 class="text-[#0d2240]">{{ result.to.name }}</h1>
+                </div>
+                <div class="ml-12">
+                    <h1 class="text-[#0d2240] text-sm">
+                        {{ result.seatClass }}
+                    </h1>
+                </div>
+                <div class="flex flex-col ml-12">
+                    <h1 class="text-[#0d2240] font-bold text-lg">
+                        R$ {{ result.price.price | number:'1.2-2' }}
+                    </h1>
+                    <span class="text-[#0d2240] font-bold">(1 Pessoa)</span>
+                </div>
+                <div class="flex justify-end">
+                    <button
+                        class="bg-[#0b9852] px-4 py-3 rounded-lg text-white font-bold shadow">
+                        ESCOLHER IDA
+                    </button>
+                </div>
+            </div>
+            <hr class="mt-4 mb-2">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <span class="text-xs text-[#0d2240]">1827 Avaliações</span>
+                    <span class="text-[#0b9852] font-bold text-xs">
+                        <i class="pi pi-star-fill"
+                            style="font-size: 0.8rem;"></i>
+                        8,0
+                    </span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-2">
+                        <img
+                            src="https://queropassagem.com.br/images/qrcode.png"
+                            class="w-3">
+                        <span class="text-[#0d2240] text-xs">Embarque
+                            direto</span>
+                    </div>
+                    <img
+                        src="https://queropassagem.com.br/imagens/sala_vip/busca.png">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
